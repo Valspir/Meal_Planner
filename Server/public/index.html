@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Meal Planner</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Osiris Meal Planner</h1>
+        <nav>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">My Meals</a></li>
+            <li><a href="#">Shopping List</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <p>Enter some keywords to generate a meal plan for the week (Comma Seperated)</p>
+        <form>
+          <div class="search-box">
+            <label for="keywords">Keywords:</label>
+            <input type="text" id="keywords" name="keywords" placeholder="e.g. vegetarian, low carb, chicken">
+          </div>
+          <div class="search-box">
+            <label for="serves">Serves</label>
+            <input type="number" id="serves" name="serves" value="4" max="10" min="1" style="width:40px"/>
+          </div>
+
+          <button type="submit" class="search-btn">Generate Meal Plan</button>
+        </form>
+        <div id="meal-plan">
+        <div id="days">
+          <p1>Monday:</p1>
+          <p1>Tuesday:</p1>
+          <p1>Wednesday:</p1>
+          <p1>Thursday:</p1>
+          <p1>Friday:</p1>
+          <p1>Saturday:</p1>
+          <p1>Sunday:</p1>
+        </div>
+        <div id="mealOrder">
+          <ul id="sortlist">
+            <li>Air Fryer Sweet and Sour Pork Balls</li>
+            <li>Broccoli Pasta Bake</li>
+            <li>Paella Rice Salad</li>
+            <li>Creamy Tuskan Chicken Pasta</li>
+            <li>One-Pot Mexican Pork</li>
+          </ul>
+          <script>
+            jsonData = []
+            fetch("/recipes")
+              .then(r => (r.json()
+                .then(data => {
+                  for(let i = 0; i < data.length; i++) {
+                    console.log(data[i])
+                    document.getElementById('sortlist').innerHTML += "<li>"+data[i]["recipeName"]+"</li>"
+                    console.log(document.getElementById('sortlist').innerHTML)
+                  }
+                }
+                )
+              )
+            )
+
+          </script>
+        </div>
+      </div>
+
+
+          <script>
+            slist(document.getElementById("sortlist"));
+          </script>
+
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 Mae</p>
+      </div>
+    </footer>
+  </body>
+</html>
