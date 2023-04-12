@@ -23,60 +23,192 @@
     <main>
       <div class="container">
         <p>Enter some keywords to generate a meal plan for the week (Comma Seperated)</p>
-        <form>
+        <form action="/search.html">
           <div class="search-box">
             <label for="keywords">Keywords:</label>
-            <input type="text" id="keywords" name="keywords" placeholder="e.g. vegetarian, low carb, chicken">
-          </div>
-          <div class="search-box">
-            <label for="serves">Serves</label>
-            <input type="number" id="serves" name="serves" value="4" max="10" min="1" style="width:40px"/>
+            <input type="text" id="keywords" name="keywords" placeholder="e.g. beef, pasta, stroganoff">
           </div>
 
-          <button type="submit" class="search-btn">Generate Meal Plan</button>
+
+          <button type="submit" class="search-btn">Search</button>
         </form>
+        <button type="submit" class="search-btn" onclick="genMealPlan()">Generate Meal Plan</button>
+        <p>The 'day' text is not aligned with the draggable boxes, RIP</p>
         <div id="meal-plan">
-        <div id="days">
-          <p1>Monday:</p1>
-          <p1>Tuesday:</p1>
-          <p1>Wednesday:</p1>
-          <p1>Thursday:</p1>
-          <p1>Friday:</p1>
-          <p1>Saturday:</p1>
-          <p1>Sunday:</p1>
-        </div>
-        <div id="mealOrder">
-          <ul id="sortlist">
-            <li>Air Fryer Sweet and Sour Pork Balls</li>
-            <li>Broccoli Pasta Bake</li>
-            <li>Paella Rice Salad</li>
-            <li>Creamy Tuskan Chicken Pasta</li>
-            <li>One-Pot Mexican Pork</li>
-          </ul>
-          <script>
-            jsonData = []
-            fetch("/recipes")
-              .then(r => (r.json()
-                .then(data => {
-                  for(let i = 0; i < data.length; i++) {
-                    console.log(data[i])
-                    document.getElementById('sortlist').innerHTML += "<li>"+data[i]["recipeName"]+"</li>"
-                    console.log(document.getElementById('sortlist').innerHTML)
+          <div id="days">
+            <p1><strong>Monday:</strong></p1>
+            <p1><strong>Tuesday:</strong></p1>
+            <p1><strong>Wednesday:</strong></p1>
+            <p1><strong>Thursday:</strong></p1>
+            <p1><strong>Friday:</strong></p1>
+            <p1><strong>Saturday:</strong></p1>
+            <p1><strong>Sunday:</strong></p1>
+          </div>
+          <div id="mealOrder">
+            <ul id="sortlist">
+
+            </ul>
+            <script>
+            /*
+              jsonData = []
+              function createRecipeInfo(recipe) {
+                const listItem = document.createElement('li');
+                const recipeDetails = document.createElement("div");
+
+                //Recipe Name
+                const recipeName = document.createElement("p");
+                recipeName.innerHTML = `<strong>${recipe.recipeName}</strong>`;
+                recipeName.style.fontSize = '1rem';
+                listItem.appendChild(recipeName);
+
+                //Expand-inator
+                listItem.addEventListener("click", (event) => {
+                  event.stopPropagation();
+                  if(document.getElementsByClassName("expanded").length == 1) {
+                    document.getElementsByClassName("expanded")[0].classList.toggle("expanded")
                   }
-                }
-                )
-              )
-            )
+                  listItem.classList.toggle("expanded");
+                  listItem.addEventListener("click", (event) => {
+                    listItem.classList.toggle("expanded")
+                  });
+                });
 
-          </script>
+                //Instructions & Ingredients
+                steps=""
+
+                JSON.parse(recipe.steps).forEach(step => {
+                  steps+="<br><br>    -"+step
+                });
+                ingredients = ""
+                recipe.ingredients.forEach(ingredient => {
+                  ingredients+="<br>    -"+ingredient.procText
+                });
+
+                //Expanded data
+                recipeDetails.classList.add("recipe-details");
+                recipeDetails.innerHTML = `
+                  <p><strong>Recipe ID:</strong> ${recipe.recipeID}
+                  <p><strong>Prep Time:</strong> ${recipe.prepTime}</p>
+                  <p><strong>Cook Time:</strong> ${recipe.cookTime}</p>
+                  <p><strong>Servings:</strong> ${recipe.serves}</p>
+                  <p><strong>Saves:</strong> ${recipe.saves}</p>
+                  <p><strong>(Very) Rough Cost:</strong> ${Math.round(Math.floor(parseFloat(recipe.cost)*100),0)/100}</p>
+                  <p><strong>Instructions:</strong>${steps}</p>
+                  <br>
+                  <p><strong>Ingredients:</strong>${ingredients}</p>
+                `;
+                listItem.appendChild(recipeName);
+                listItem.appendChild(recipeDetails);
+                return listItem
+              }
+
+              function genMealPlan() {
+                for(i = 0; i < 7; i++) {
+                  fetch("/mealplan")
+                    .then(r => (r.json()))
+                      .then(recipe => {
+                        listItem = createRecipeInfo(recipe[0])
+                        document.getElementById('sortlist')
+                        sortlist.appendChild(listItem)
+                        slist(document.getElementById("sortlist"));
+                      })
+                      }
+                    }*/
+                    function createRecipeInfo(recipe) {
+                      const listItem = document.createElement('li');
+                      const recipeDetails = document.createElement("div");
+
+                      // Create recipe container
+                      const recipeContainer = document.createElement('div');
+                      recipeContainer.classList.add('recipe-container');
+                      listItem.appendChild(recipeContainer);
+
+                      //Recipe Name
+                      const recipeName = document.createElement("p");
+                      recipeName.innerHTML = `<strong class="recipe-name">${recipe.recipeName}</strong>`;
+                      recipeContainer.appendChild(recipeName);
+
+                      const rerollBtn = document.createElement('input'); // add this line
+                      rerollBtn.type = "image"
+                      rerollBtn.src = "images/dice.png"
+                      rerollBtn.height = 25
+                      rerollBtn.width = 25
+                      rerollBtn.alt = "Re-Roll"
+                      rerollBtn.classList.add('reroll-btn'); // add this line
+                      recipeContainer.appendChild(rerollBtn);
+
+                      recipeContainer.addEventListener('click', (event) => {
+                         if (!event.target.classList.contains('reroll-btn')) {
+                           //event.stopPropagation();
+                           if (listItem.classList.contains('expanded')) {
+                             listItem.classList.remove('expanded');
+                           } else {
+                             const expandedCards = document.querySelectorAll('.expanded');
+                             expandedCards.forEach((card) => card.classList.remove('expanded'));
+                             listItem.classList.add('expanded');
+                           }
+                         }else{
+                           event.stopPropagation()
+                           fetch('/mealplan')
+                             .then(r => r.json())
+                             .then(newRecipe => {
+                               const newRecipeCard = createRecipeInfo(newRecipe[0]);
+                               listItem.replaceWith(newRecipeCard);
+                               slist(document.getElementById("sortlist"));
+                             });
+                         }
+                      });
+
+                      //Instructions & Ingredients (not modified)
+                      steps=""
+                      JSON.parse(recipe.steps).forEach(step => {
+                        steps+="<br><br>    -"+step
+                      });
+                      ingredients = ""
+                      recipe.ingredients.forEach(ingredient => {
+                        ingredients+="<br>    -"+ingredient.procText
+                      });
+
+                      //Expanded data (not modified)
+                      recipeDetails.classList.add("recipe-details");
+                      recipeDetails.innerHTML = `
+                        <p><strong>Recipe ID:</strong> ${recipe.recipeID}
+                        <p><strong>Prep Time:</strong> ${recipe.prepTime}</p>
+                        <p><strong>Cook Time:</strong> ${recipe.cookTime}</p>
+                        <p><strong>Servings:</strong> ${recipe.serves}</p>
+                        <p><strong>Saves:</strong> ${recipe.saves}</p>
+                        <p><strong>(Very) Rough Cost:</strong> ${Math.round(Math.floor(parseFloat(recipe.cost)*100),0)/100}</p>
+                        <p><strong>Instructions:</strong>${steps}</p>
+                        <br>
+                        <p><strong>Ingredients:</strong>${ingredients}</p>
+                      `;
+                      listItem.appendChild(recipeDetails);
+
+                      return listItem;
+                    }
+
+
+                    function genMealPlan() {
+                      sortList = document.getElementById('sortlist')
+                      if(sortList.childElementCount == 7) {
+                        sortList.innerHTML = ""
+                      }
+                      for (i = 0; i < 7; i++) {
+                        fetch("/mealplan")
+                          .then(r => (r.json()))
+                          .then(recipe => {
+                            const listItem = createRecipeInfo(recipe[0]);
+                            sortList.appendChild(listItem);
+                            slist(document.getElementById("sortlist"));
+                          })
+                          .catch(error => {
+                            console.error(error);
+                          });
+                      }
+                    }
+            </script>
+          </div>
         </div>
-      </div>
-
-
-          <script>
-            slist(document.getElementById("sortlist"));
-          </script>
-
       </div>
     </main>
     <footer>

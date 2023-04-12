@@ -153,7 +153,7 @@ label {
 }
 #days p1 {
   gap: 20px;
-  padding: 10px;
+  padding: 25px;
   float: left;
   margin-top: 20px;
   margin-left: -10px
@@ -163,4 +163,47 @@ label {
 }
 #mealOrder {
   flex: 3;
+}
+
+#results li {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+#results li:hover {
+  background-color: #eee;
+}
+.recipe-details {
+  display: none;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.expanded .recipe-details {
+  display: block;
+}
+
+.recipe-container {
+  display: flex;
+  justify-content: space-between; /* add this line */
+  align-items: center;
+}
+
+.recipe-name {
+  font-size: 1rem;
+  margin-right: 1rem;
+}
+
+/* Reroll button */
+.reroll-btn {
+  /*border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;*/
+  background-image: url('images/dice.png');
+  align-content: center;
+  margin: 4px 2px;
 }
